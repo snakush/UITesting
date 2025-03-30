@@ -1,0 +1,273 @@
+{
+	"info": {
+		"_postman_id": "8ed5745f-66de-4269-9404-cd3d80b2148f",
+		"name": "API TESTING",
+		"description": "testing of the valid and invalid values",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7207642"
+	},
+	"item": [
+		{
+			"name": "Create  valid pet details values(200)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Pet name is bunny\", function () {\r",
+							"    pm.expect(pm.response.json().name).to.eql(\"bunny\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Pet status is sold\", function () {\r",
+							"    pm.expect(pm.response.json().status).to.eql(\"sold\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains pet ID\", function () {\r",
+							"    pm.expect(pm.response.json()).to.have.property(\"id\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 2,\r\n  \"category\": {\r\n    \"id\": 11,\r\n    \"name\": \"Rabit\"\r\n  },\r\n  \"name\": \"bunny\",\r\n  \"photoUrls\": [\"url12\"],\r\n  \"tags\": [\r\n    {\r\n      \"id\": 101,\r\n      \"name\": \"pet\"\r\n    }\r\n  ],\r\n  \"status\": \"sold\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/pet",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create data with Invalid inputs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 400\", function () {\r",
+							"    pm.response.to.have.status(400);  // Expecting 400 Bad Request\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"id\": 2,\r\n  \"category\": {\r\n    \"id\": 11,\r\n    \"name\": \"Rabit\"\r\n  },\r\n  \"name\": \"bunny\",\r\n  \"photoUrls\": [\"url12\"],\r\n  \"tags\": [],  // Empty array for tags, which may be invalid\r\n  \"status\": \"sold\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/pet",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Non-Existing delete data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"\r",
+							"\r",
+							"// Test for deleting a non-existing pet\r",
+							"pm.test(\"Status code is 404 for deleting non-existing pet\", function () {\r",
+							"    pm.response.to.have.status(404);  // Expecting 404 Not Found for invalid pet ID\r",
+							"});\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "//  {\r\n//   \"message\": \"Pet not found\"\r\n//  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/pet/8",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet",
+						"8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Existing Delete data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test for deleting an existing pet\r",
+							"pm.test(\"Status code is 200 for deleting existing pet\", function () {\r",
+							"    pm.response.to.have.status(200);  // Expecting 200 OK for successful deletion\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pet/10",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet",
+						"10"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get the pet details for existing data",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 for existing pet\", function () {\r",
+							"    pm.response.to.have.status(200);  // Expecting 200 OK for valid pet ID\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Pet details returned\", function () {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.id).to.eql(12);  //  the pet ID matches the expected ID\r",
+							"    pm.expect(responseJson.name).to.be.a(\"string\");  //  the pet name is a string\r",
+							"    pm.expect(responseJson.status).to.be.oneOf([\"available\", \"pending\", \"sold\"]);  // Validate the pet status is one of the allowed values\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pet/12",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet",
+						"12"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get data for non-existing",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 404 for non-existing pet\", function () {\r",
+							"    pm.response.to.have.status(404);  // Expecting 404 Not Found for invalid pet ID\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Error message mentions pet not found\", function () {\r",
+							"    const responseJson = pm.response.json();\r",
+							"    pm.expect(responseJson.message).to.include(\"Pet not found\");  // Adjust this based on the actual error message from your API\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/pet/10",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"pet",
+						"10"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "https://petstore.swagger.io/v2",
+			"type": "default"
+		}
+	]
+}
